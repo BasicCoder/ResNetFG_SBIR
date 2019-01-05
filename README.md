@@ -1,0 +1,35 @@
+# Caffe2Torch
+## Results
+| Evaluation Model       | args                                                                                                          | epoch | Recall@1 | Recall@5 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- | ----- | -------- | -------- |
+| vgg16(random split)    | batch_size=16 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 190   | 0.329451 | 0.698081 |
+|                        |                                                                                                               | 370   | 0.350364 | 0.720847 |
+|                        |                                                                                                               | 480   | 0.353673 | 0.707743 |
+|                        |                                                                                                               | 495   | 0.362277 | 0.719788 |
+|                        |                                                                                                               | 865   | 0.370086 | 0.729054 |
+|                        |                                                                                                               | 875   | 0.371674 | 0.733289 |
+| resnet50(random split) | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 465   | 0.410457 | 0.802647 |
+|                        |                                                                                                               | 775   | 0.432561 | 0.826737 |
+|                        |                                                                                                               | 825   | 0.443150 | 0.821840 |
+| resnet50(random split) | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.254665 | 0.662872 |
+|                        |                                                                                                               | 200   | 0.296228 | 0.708273 |
+|                        |                                                                                                               | 500   | 0.344540 | 0.746923 |
+|                        |                                                                                                               | 750   | 0.372733 | 0.773130 |
+|                        |                                                                                                               | 1070  | 0.392455 | 0.793382 |
+| resnet50               | batch_size=128<br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.281233 | 0.684806 |
+|                        |                                                                                                               | 200   | 0.334288 | 0.741408 |
+|                        |                                                                                                               | 500   | 0.398663 | 0.780687 |
+|                        |                                                                                                               |       |          |
+| resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.290371 | 0.708674 |
+|                        |                                                                                                               | 200   | 0.346972 | 0.750682 |
+|                        |                                                                                                               | 500   | 0.391571 | 0.784097 |
+|                        |                                                                                                               |       |          |          |
+| resnet50               | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.276732 | 0.683170 |
+|                        |                                                                                                               | 200   | 0.328287 | 0.737179 |
+|                        |                                                                                                               | 500   | 0.380660 | 0.776187 |
+|                        |                                                                                                               | 965   | 0.433442 | 0.805237 |
+| resnet152              | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.254910 | 0.662029 |
+|                        |                                                                                                               | 200   | 0.314375 | 0.733497 |
+|                        |                                                                                                               |       |
+| resnet101              | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.292280 | 0.699673 |
+|                        |                                                                                                               | 200   | 0.364430 | 0.769913 |

@@ -4,6 +4,7 @@ import torch as t
 import torchvision as tv
 from torch import nn
 import pickle
+import numpy as np
 
 class Extractor(object):
     def __init__(self, pretrained=False, vis=True, model=None):
@@ -60,29 +61,31 @@ class Extractor(object):
     # extract the inputs' feature via self.model
     # the model's output contains both the inputs' feature and category info
     @t.no_grad()
-    def extract_new(self, data_root, out_root=None):
+    def extract_new(self, data_root, out_root=None, batch_size=1):
         feature = []
         name = []
 
         self.model.eval()
 
         cnames = sorted(os.listdir(data_root))
-
         for cname in cnames:
             fnames = sorted(os.listdir(os.path.join(data_root, cname)))
-
             for fname in fnames:
-                path = os.path.join(data_root, cname, fname)
-
-                image = Image.open(path)
-                image = self.transform(image)
-                image = image[None]
-                image = image.cuda()
-
-                _, i_feature = self.model(image)
-
-                feature.append(i_feature.cpu().squeeze().numpy())
                 name.append(cname + '/' + fname)
+
+        fname_chunks = [name[i:i+batch_size] for i in range(0, len(name), batch_size)]
+
+        for fname_chunk in fname_chunks:
+            image_chunk = [self.transform(Image.open(os.path.join(data_root, fname))) for fname in fname_chunk]
+            images = t.stack(image_chunk, 0)
+            images = images.cuda()
+
+            _, i_feature = self.model(images)
+            if batch_size == 1:
+                i_feature = [i_feature.cpu().squeeze().numpy()]
+            else:
+                i_feature = np.vsplit(i_feature.cpu().squeeze().numpy(), i_feature.size(0))
+            feature.extend(i_feature)
 
         data = {'name': name, 'feature': feature}
         if out_root:

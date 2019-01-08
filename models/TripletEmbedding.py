@@ -175,11 +175,11 @@ class TripletNet(object):
         with t.no_grad():
             # extract photo feature
             extractor = Extractor(model=self.photo_net, vis=False)
-            photo_data = extractor.extract_new(self.photo_test)
+            photo_data = extractor.extract_new(self.photo_test, batch_size=self.opt.test_batch_size)
 
             # extract sketch feature
             extractor.reload_model(self.sketch_net)
-            sketch_data = extractor.extract_new(self.sketch_test)
+            sketch_data = extractor.extract_new(self.sketch_test, batch_size=self.opt.test_batch_size)
 
             photo_name = photo_data['name']
             photo_feature = photo_data['feature']
@@ -231,6 +231,9 @@ class TripletNet(object):
             scheduler.step()
         # lr = self.optimizers[0].param_groups[0]['lr']
         # print('learning rate = %.7f' % lr)
+    def update_test_frequency(self, epoch):
+        if epoch > self.opt.niter + self.opt.niter_decay / 3:
+            self.opt.test_freq = 5
 
     def run(self):
         if self.net == 'vgg16':
@@ -289,7 +292,7 @@ class TripletNet(object):
             # self.adjust_learning_rate(self.photo_optimizer, epoch)
             # self.adjust_learning_rate(self.sketch_optimizer, epoch)
 
-            if epoch % 5 == 0:
+            if epoch % self.opt.test_freq == 0:
                 # test
                 recall_1, recall_5 = self.test()
                 print('epoch:', epoch, '\trecall@1:', recall_1, '\trecall@5:', recall_5)
@@ -312,4 +315,5 @@ class TripletNet(object):
             self.train()
             # adjust learning rate
             self.update_learning_rate()
-
+            # adjust test frequency
+            self.update_test_frequency(epoch)

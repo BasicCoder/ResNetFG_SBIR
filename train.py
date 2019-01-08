@@ -18,6 +18,7 @@ def parase_args():
     parser.add_argument('--sketch_root', type=str, default='/home/bc/Work/caffe2torch/data/dataset/sketch-triplet-train-all', help='Training sketch root')
 
     parser.add_argument('--batch_size', type=int, default=16, help='The size of batch (default :16')
+    parser.add_argument('--test_batch_size', type=int, default=32, help='The size of batch (default :16')
     parser.add_argument('--device', type=str, default='0', help='The cuda device to be used (default: 0)')
     parser.add_argument('--epochs', type=int, default=10000, help='The number of epochs to run (default: 1000)')
     parser.add_argument('--epoch_count', type=int, default=1, help='the starting epoch count, we save the model by <epoch_count>,<save_latest_freq>+<epoch_count>...')
@@ -26,6 +27,7 @@ def parase_args():
     parser.add_argument('--lr', type=float, default=1e-5, help='The learning rate of the model')
     parser.add_argument('--weight_decay', type=float, default=0.0005, help='Adm weight decay')
     parser.add_argument('--lr_policy', type=str, default='lambda', help='learning rate policy: lambda|step|plateau')
+    parser.add_argument('--test_freq', type=int, default=50, help='test frequency')
 
     parser.add_argument('--photo_test', type=str, default='/home/bc/Work/caffe2torch/data/dataset/photo-test-all', help='Testing photo root')
     parser.add_argument('--sketch_test', type=str, default= '/home/bc/Work/caffe2torch/data/dataset/sketch-triplet-test-all',help='Testing sketch root')

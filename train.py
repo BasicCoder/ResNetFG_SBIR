@@ -1,6 +1,8 @@
+import time
 import argparse
 import os
 from models.TripletEmbedding import TripletNet
+
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -107,7 +109,7 @@ def main():
 
 
     #os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
-
+    print('start time: ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
     triplet_net = TripletNet(args)
     triplet_net.run()
 

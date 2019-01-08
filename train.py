@@ -20,6 +20,7 @@ def parase_args():
     parser.add_argument('--batch_size', type=int, default=16, help='The size of batch (default :16')
     parser.add_argument('--device', type=str, default='0', help='The cuda device to be used (default: 0)')
     parser.add_argument('--epochs', type=int, default=10000, help='The number of epochs to run (default: 1000)')
+    parser.add_argument('--epoch_count', type=int, default=1, help='the starting epoch count, we save the model by <epoch_count>,<save_latest_freq>+<epoch_count>...')
     parser.add_argument('--niter', type=int, default=1000, help='# of iter at starting learning rate')
     parser.add_argument('--niter_decay', type=int, default=9000, help='# of iter to linearly decay learning rate to zero')
     parser.add_argument('--lr', type=float, default=1e-5, help='The learning rate of the model')

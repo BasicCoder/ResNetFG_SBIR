@@ -23,7 +23,7 @@ class Config(object):
 def get_scheduler(optimizer, opt):
     if opt.lr_policy == 'lambda':
         def lambda_rule(epoch):
-            lr_l = 1.0 - max(0, epoch + 1 - opt.niter) / float(opt.niter_decay + 1)
+            lr_l = 1.0 - max(0, epoch + 1 + opt.epoch_count - opt.niter) / float(opt.niter_decay + 1)
             return lr_l
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule)
     elif opt.lr_policy == 'step':
@@ -269,8 +269,8 @@ class TripletNet(object):
         # optimizer
         self.schedulers = []
         self.optimizers = []
-        self.photo_optimizer = t.optim.Adam(self.photo_net.parameters(), lr=1e-5, weight_decay=self.opt.weight_decay)
-        self.sketch_optimizer = t.optim.Adam(self.sketch_net.parameters(), lr=1e-5, weight_decay=self.opt.weight_decay)
+        self.photo_optimizer = t.optim.Adam(self.photo_net.parameters(), lr=self.lr, weight_decay=self.opt.weight_decay)
+        self.sketch_optimizer = t.optim.Adam(self.sketch_net.parameters(), lr=self.lr, weight_decay=self.opt.weight_decay)
         self.optimizers.append(self.photo_optimizer)
         self.optimizers.append(self.sketch_optimizer)
         for optimizer in self.optimizers:
@@ -283,7 +283,7 @@ class TripletNet(object):
         self.dataset = data_loader.load_data()
 
         self.best_recall_1 = 0
-        for epoch in tqdm.tqdm(range(self.opt.niter + self.opt.niter_decay)):
+        for epoch in tqdm.tqdm(range(self.opt.epoch_count, self.opt.niter + self.opt.niter_decay + 1)):
 
             # adjust learning rate
             # self.adjust_learning_rate(self.photo_optimizer, epoch)

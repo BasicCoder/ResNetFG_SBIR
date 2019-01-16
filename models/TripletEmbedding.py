@@ -314,7 +314,7 @@ class TripletNet(object):
                 # test
                 recall_1, recall_5 = self.test()
                 print('epoch:', epoch, '\trecall@1:', recall_1, '\trecall@5:', recall_5)
-                self.logger.info('epoch:%d \trecall@1:%15f \trecall@5:%15f' % (epoch,  recall_1, recall_5))
+                self.logger.info('epoch:%d \trecall@1:%.15f \trecall@5:%.15f' % (epoch,  recall_1, recall_5))
                 if self.vis:
                     self.visualizer.plot('recall', np.array([recall_1, recall_5]), legend=['recall@1', 'recall@5'])
 

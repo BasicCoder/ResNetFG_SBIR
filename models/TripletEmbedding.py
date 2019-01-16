@@ -49,6 +49,7 @@ class TripletNet(object):
         self.sketch_test = opt.sketch_test
         self.save_dir = opt.save_dir
 
+        self.logger = opt.logger
         # vis
         self.vis = opt.vis
         self.env = opt.env
@@ -219,6 +220,23 @@ class TripletNet(object):
             recall_5 = count_5 / (ii + 1)
         return recall_1, recall_5
 
+    def save_checkpoint(self, is_best, only_save_best, epoch):
+        photo_net_save_name = self.save_dir + '/photo' + '/photo_' + self.net + '_%s.pth' % epoch
+        sketch_net_save_name = self.save_dir + '/sketch' + '/sketch_' + self.net + '_%s.pth' % epoch
+        if not only_save_best:
+            t.save(self.photo_net.state_dict(), photo_net_save_name)
+            t.save(self.sketch_net.state_dict(), sketch_net_save_name)
+
+        if is_best:
+            if only_save_best:
+                photo_net_save_name = self.save_dir + '/photo' + '/photo_' + self.net + '_best.pth'
+                sketch_net_save_name = self.save_dir + '/sketch' + '/sketch_' + self.net + '_best.pth'
+                t.save(self.photo_net.state_dict(), photo_net_save_name)
+                t.save(self.sketch_net.state_dict(), sketch_net_save_name)
+            else:
+                shutil.copyfile(photo_net_save_name, self.save_dir + '/photo' + '/photo_' + self.net + '_best.pth')
+                shutil.copyfile(sketch_net_save_name, self.save_dir + '/sketch' + '/sketch_' + self.net + '_best.pth')
+
     def adjust_learning_rate(self, optimizer, epoch):
         """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
         lr = self.lr * (0.8 ** (epoch // 1000))
@@ -296,20 +314,15 @@ class TripletNet(object):
                 # test
                 recall_1, recall_5 = self.test()
                 print('epoch:', epoch, '\trecall@1:', recall_1, '\trecall@5:', recall_5)
+                self.logger.info('epoch:%d \trecall@1:%15f \trecall@5:%15f' % (epoch,  recall_1, recall_5))
                 if self.vis:
                     self.visualizer.plot('recall', np.array([recall_1, recall_5]), legend=['recall@1', 'recall@5'])
-
-                photo_net_save_name = self.save_dir + '/photo' + '/photo_' + self.net + '_%s.pth' % epoch
-                sketch_net_save_name = self.save_dir + '/sketch' + '/sketch_' + self.net + '_%s.pth' % epoch
-                t.save(self.photo_net.state_dict(), photo_net_save_name)
-                t.save(self.sketch_net.state_dict(), sketch_net_save_name)
 
                 # remember best acc and save checkpoint
                 is_best = recall_1 > self.best_recall_1
                 self.best_recall_1 = max(recall_1, self.best_recall_1)
-                if is_best:
-                    shutil.copyfile(photo_net_save_name, self.save_dir + '/photo' + '/photo_' + self.net + '_best.pth')
-                    shutil.copyfile(sketch_net_save_name, self.save_dir + '/sketch' + '/sketch_' + self.net + '_best.pth')
+                # save model
+                self.save_checkpoint(is_best, self.opt.only_save_best, epoch)
 
             # train
             self.train()

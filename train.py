@@ -1,8 +1,8 @@
 import time
 import argparse
 import os
+import logging
 from models.TripletEmbedding import TripletNet
-
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -31,11 +31,13 @@ def parase_args():
     parser.add_argument('--lr_policy', type=str, default='lambda', help='learning rate policy: lambda|step|plateau')
     parser.add_argument('--test_freq', type=int, default=50, help='test frequency')
 
+    parser.add_argument('--only_save_best', type=str2bool, nargs='?', default=False, help='is only save best model')
     parser.add_argument('--photo_test', type=str, default='/home/bc/Work/caffe2torch/data/dataset/photo-test-all', help='Testing photo root')
     parser.add_argument('--sketch_test', type=str, default= '/home/bc/Work/caffe2torch/data/dataset/sketch-triplet-test-all',help='Testing sketch root')
 
-    parser.add_argument('--save_dir', type=str, default='/home/bc/Work/caffe2torch/checkpoints',
-                        help='The folder to save the model status')
+    parser.add_argument('--save_dir', type=str, default='/home/bc/Work/caffe2torch/checkpoints', help='The folder to save the model status')
+    parser.add_argument('--log_dir', type=str, default='/home/bc/Work/caffe2torch/logs', help='The folder to save the model logs')
+    parser.add_argument('--log_name', type=str, default='logs.txt', help='The file to save the model logs')
 
     parser.add_argument('--vis', type=str2bool, nargs='?', default=True, help='Whether to visualize')
     parser.add_argument('--env', type=str, default='caffe2torch_tripletloss', help='The visualization environment')
@@ -64,6 +66,10 @@ def check_args(args):
         os.mkdir(args.save_dir)
         os.mkdir(save_photo_dir)
         os.mkdir(save_sketch_dir)
+
+    if not os.path.exists(args.log_dir):
+        os.mkdir(args.log_dir)
+    args.log_name = args.net + '_' + args.name + '_' + args.log_name
 
     str_ids = args.device.split(',')
     args.gpu_ids = []
@@ -101,13 +107,29 @@ def main():
     if args is None:
         exit()
 
+    # First，create a logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)  # log level
+    # Second, create a handler, for write to log file
+    log_name = os.path.join(args.log_dir, args.log_name)
+    fh = logging.FileHandler(log_name, mode='w')
+    fh.setLevel(logging.INFO)  # log file log level
+    # Third, define handler formatter
+    formatter = logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+    fh.setFormatter(formatter)
+    # Fourth,
+    logger.addHandler(fh)
+
     opts = vars(args)
     print('------------ Options -------------')
+    logger.info('------------ Options -------------')
     for k, v in sorted(opts.items()):
         print('%s=%s' % (str(k), str(v)))
+        logger.info('%s=%s' % (str(k), str(v)))
     print('-------------- End ----------------')
+    logger.info('-------------- End ----------------')
 
-
+    args.logger = logger
     #os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
     print('start time: ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
     triplet_net = TripletNet(args)

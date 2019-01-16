@@ -23,7 +23,7 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 1000  | 0.433170 | 0.805646 |
 |                        |                                                                                                               | 1500  | 0.457447 | 0.816967 |
 |                        |                                                                                                               | 1770  | 0.465767 | 0.826650 |
-|                        |                                                                                                               |       |          |          |
+|                        |                                                                                                               | 2115  | 0.471768 | 0.823923 |
 | resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.290371 | 0.708674 |
 |                        |                                                                                                               | 200   | 0.346972 | 0.750682 |
 |                        |                                                                                                               | 500   | 0.391571 | 0.784097 |

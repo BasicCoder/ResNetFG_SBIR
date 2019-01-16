@@ -85,6 +85,7 @@ class Extractor(object):
                 i_feature = [i_feature.cpu().squeeze().numpy()]
             else:
                 i_feature = np.vsplit(i_feature.cpu().squeeze().numpy(), i_feature.size(0))
+            i_feature = [np.squeeze(i) for i in i_feature]
             feature.extend(i_feature)
 
         data = {'name': name, 'feature': feature}

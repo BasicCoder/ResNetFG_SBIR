@@ -43,6 +43,15 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 2790  | 0.488543 | 0.837289 |
 |                        |                                                                                                               | 2970  | 0.487861 | 0.838925 |
 |                        |                                                                                                               | 3000  |
+| resnet50 hardest       | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.291462 | 0.710311 |
+|                        | niter=2000 <br>  niter_decay=2000                                                                             | 200   | 0.344517 | 0.749454 |
+|                        |                                                                                                               | 500   | 0.396208 | 0.785052 |
+|                        |                                                                                                               | 1000  |
+|                        |
+| resnet50 hardest       | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 2920  | 0.483906 | 0.834970 |
+|                        | niter=2000 <br> niter_decay=2000 <br> epoch_count=2500(from resnet50 b64 best?)                               | 3175  | 0.489498 | 0.835788 |
+|                        |                                                                                                               | 3195  | 0.491134 | 0.834152 |
+|                        |                                                                                                               |       |
 | resnet152              | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.254910 | 0.662029 |
 |                        |                                                                                                               | 200   | 0.314375 | 0.733497 |
 |                        |                                                                                                               |       |

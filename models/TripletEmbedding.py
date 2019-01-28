@@ -34,6 +34,66 @@ def get_scheduler(optimizer, opt):
         return NotImplementedError('learning rate policy [%s] is not implemented', opt.lr_policy)
     return scheduler
 
+def euclidean_dist(x, y):
+  """
+  Args:
+    x: pytorch Variable, with shape [m, d]
+    y: pytorch Variable, with shape [n, d]
+  Returns:
+    dist: pytorch Variable, with shape [m, n]
+  """
+  m, n = x.size(0), y.size(0)
+  xx = t.pow(x, 2).sum(1, keepdim=True).expand(m, n)
+  yy = t.pow(y, 2).sum(1, keepdim=True).expand(n, m).t()
+  dist = xx + yy
+  dist.addmm_(1, -2, x, y.t())
+  dist = dist.clamp(min=1e-12).sqrt()  # for numerical stability
+  return dist
+
+def batch_euclidean_dist(x, y):
+  """
+  Args:
+    x: pytorch Variable, with shape [N, m, d]
+    y: pytorch Variable, with shape [N, n, d]
+  Returns:
+    dist: pytorch Variable, with shape [N, m, n]
+  """
+  assert len(x.size()) == 3
+  assert len(y.size()) == 3
+  assert x.size(0) == y.size(0)
+  assert x.size(-1) == y.size(-1)
+
+  N, m, d = x.size()
+  N, n, d = y.size()
+
+  # shape [N, m, n]
+  xx = t.pow(x, 2).sum(-1, keepdim=True).expand(N, m, n)
+  yy = t.pow(y, 2).sum(-1, keepdim=True).expand(N, n, m).permute(0, 2, 1)
+  dist = xx + yy
+  dist.baddbmm_(1, -2, x, y.permute(0, 2, 1))
+  dist = dist.clamp(min=1e-12).sqrt()  # for numerical stability
+  return dist
+
+def hard_example_mining(s_feature, p_feature):
+
+    dist_mat = euclidean_dist(s_feature, p_feature)
+
+    assert len(dist_mat.size()) == 2
+    assert dist_mat.size(0) == dist_mat.size(1)
+    N = dist_mat.size(0)
+
+    max_value = t.max(dist_mat) + 100.0
+
+    eye = t.eye(N, dtype=t.uint8).cuda()
+    dist_mat = dist_mat.masked_fill_(eye, max_value)
+    # `dist_an` means distance(anchor, negative)
+    # both `dist_an` and `relative_n_inds` with shape [N]
+    dist_an, relative_n_inds = t.min(dist_mat, 1)
+
+    negative_feature = t.index_select(p_feature, 0, relative_n_inds)
+    assert p_feature.size() == negative_feature.size()
+    return negative_feature
+
 class TripletNet(object):
     def __init__(self, opt):
         self.opt = opt
@@ -172,6 +232,62 @@ class TripletNet(object):
         self.photo_cat_loss_meter.reset()
         self.sketch_cat_loss_meter.reset()
 
+    def train_hardest(self):
+        self.triplet_loss_meter = AverageValueMeter()
+        self.sketch_cat_loss_meter = AverageValueMeter()
+        self.photo_cat_loss_meter = AverageValueMeter()
+
+        self.photo_net.train()
+        self.sketch_net.train()
+        for ii, data in enumerate(self.dataset):
+            self.photo_optimizer.zero_grad()
+            self.sketch_optimizer.zero_grad()
+
+            photo = data['P'].cuda()
+            sketch = data['S'].cuda()
+            label = data['L'].cuda()
+
+            # vis.images(photo.detach().cpu().numpy()*0.5 + 0.5, win='photo')
+            # vis.images(sketch.detach().cpu().numpy()*0.5 + 0.5, win='sketch')
+
+            p_cat, p_feature = self.photo_net(photo)
+            s_cat, s_feature = self.sketch_net(sketch)
+            # category loss
+            p_cat_loss = self.photo_cat_loss(p_cat, label)
+            s_cat_loss = self.sketch_cat_loss(s_cat, label)
+
+            self.photo_cat_loss_meter.add(p_cat_loss.item())
+            self.sketch_cat_loss_meter.add(s_cat_loss.item())
+
+            # p_cat_loss.backward(retain_graph=True)
+            # s_cat_loss.backward(retain_graph=True)
+
+            # triplet loss
+            loss = (p_cat_loss + s_cat_loss) * self.opt.weight_cat
+
+            anchor_feature = s_feature
+            positive_feature = p_feature
+            negative_feature = hard_example_mining(s_feature, p_feature)
+
+            tri_loss = self.triplet_loss(anchor_feature, positive_feature, negative_feature)
+            loss = loss + tri_loss
+
+            loss.backward()
+
+            self.photo_optimizer.step()
+            self.sketch_optimizer.step()
+
+            self.triplet_loss_meter.add(loss.item())
+
+        if self.vis:
+            self.visualizer.plot('triplet_loss', np.array([self.triplet_loss_meter.value()[0], self.photo_cat_loss_meter.value()[0],
+                                                           self.sketch_cat_loss_meter.value()[0]]),
+                                 legend=['triplet_loss', 'photo_cat_loss', 'sketch_cat_loss'])
+
+        self.triplet_loss_meter.reset()
+        self.photo_cat_loss_meter.reset()
+        self.sketch_cat_loss_meter.reset()
+
     def test(self):
         with t.no_grad():
             # extract photo feature
@@ -278,6 +394,8 @@ class TripletNet(object):
         if self.fine_tune:
             photo_net_root = self.model_root
             sketch_net_root = self.model_root.replace('photo', 'sketch')
+            self.logger.info('photo_model_root: %s' % photo_net_root)
+            self.logger.info('sketch_model_root: %s' % sketch_net_root)
 
             self.photo_net.load_state_dict(t.load(photo_net_root, map_location=t.device('cpu')))
             self.sketch_net.load_state_dict(t.load(sketch_net_root, map_location=t.device('cpu')))

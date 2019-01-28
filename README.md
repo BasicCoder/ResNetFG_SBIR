@@ -24,13 +24,14 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 1500  | 0.457447 | 0.816967 |
 |                        |                                                                                                               | 1770  | 0.465767 | 0.826650 |
 |                        |                                                                                                               | 2115  | 0.471768 | 0.823923 |
+|                        |                                                                                                               | 3000  | 0.489362 | 0.835788 |
 | resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.290371 | 0.708674 |
 |                        |                                                                                                               | 200   | 0.346972 | 0.750682 |
 |                        |                                                                                                               | 500   | 0.391571 | 0.784097 |
 |                        |                                                                                                               | 1000  | 0.425259 | 0.811102 |
 |                        |                                                                                                               | 1500  | 0.439034 | 0.814512 |
 |                        |                                                                                                               | 1625  | 0.458674 | 0.812057 |
-|                        |                                                                                                               |       |          |          |
+|                        |                                                                                                               | 3000  | 0.484452 | 0.830742 |
 | resnet50               | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.276732 | 0.683170 |
 |                        | niter=1000 <br>  niter_decay=2000                                                                             | 200   | 0.328287 | 0.737179 |
 |                        |                                                                                                               | 500   | 0.380660 | 0.776187 |
@@ -41,6 +42,7 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 2750  | 0.484861 | 0.831015 |
 |                        |                                                                                                               | 2790  | 0.488543 | 0.837289 |
 |                        |                                                                                                               | 2970  | 0.487861 | 0.838925 |
+|                        |                                                                                                               | 3000  |
 | resnet152              | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.254910 | 0.662029 |
 |                        |                                                                                                               | 200   | 0.314375 | 0.733497 |
 |                        |                                                                                                               |       |
@@ -51,3 +53,6 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 1390  | 0.480087 | 0.837561 |
 |                        |                                                                                                               | 1500  | 0.464130 | 0.824195 |
 |                        |                                                                                                               | 1725  | 0.486361 | 0.851746 |
+|                        |                                                                                                               | 2500  | 0.516912 | 0.851064 |
+|                        |                                                                                                               | 3420  | 0.518958 | 0.856792 |
+|                        |                                                                                                               | 3500  | 0.523322 | 0.858292 |

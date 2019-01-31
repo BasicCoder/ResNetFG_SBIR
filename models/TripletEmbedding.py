@@ -6,6 +6,7 @@ from data import TripletDataLoader
 
 from models.vgg import vgg16
 from models.resnet import resnet34, resnet50, resnet101, resnet152
+from models.center_loss import CenterLoss
 from utils.visualize import Visualizer
 from torchnet.meter import AverageValueMeter
 
@@ -172,9 +173,6 @@ class TripletNet(object):
         self.sketch_net.train()
         for ii, data in enumerate(self.dataset):
 
-            self.photo_optimizer.zero_grad()
-            self.sketch_optimizer.zero_grad()
-
             photo = data['P'].cuda()
             sketch = data['S'].cuda()
             label = data['L'].cuda()
@@ -217,6 +215,9 @@ class TripletNet(object):
             # print('loss :', loss)
             # loss = loss / opt.batch_size
 
+            self.photo_optimizer.zero_grad()
+            self.sketch_optimizer.zero_grad()
+
             loss.backward()
 
             self.photo_optimizer.step()
@@ -240,8 +241,6 @@ class TripletNet(object):
         self.photo_net.train()
         self.sketch_net.train()
         for ii, data in enumerate(self.dataset):
-            self.photo_optimizer.zero_grad()
-            self.sketch_optimizer.zero_grad()
 
             photo = data['P'].cuda()
             sketch = data['S'].cuda()
@@ -271,6 +270,9 @@ class TripletNet(object):
 
             tri_loss = self.triplet_loss(anchor_feature, positive_feature, negative_feature)
             loss = loss + tri_loss
+
+            self.photo_optimizer.zero_grad()
+            self.sketch_optimizer.zero_grad()
 
             loss.backward()
 

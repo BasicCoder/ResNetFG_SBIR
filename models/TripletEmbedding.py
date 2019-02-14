@@ -211,7 +211,7 @@ class TripletNet(object):
 
                 tri_loss = self.triplet_loss(anchor_feature, positive_feature, negative_feature)
                 # print('tri_loss :', tri_loss)
-                loss = loss + tri_loss
+                loss = loss + tri_loss * self.opt.weight_tri
             # print('loss :', loss)
             # loss = loss / opt.batch_size
 
@@ -269,7 +269,7 @@ class TripletNet(object):
             negative_feature = hard_example_mining(s_feature, p_feature)
 
             tri_loss = self.triplet_loss(anchor_feature, positive_feature, negative_feature)
-            loss = loss + tri_loss
+            loss = loss + tri_loss * self.opt.weight_tri
 
             self.photo_optimizer.zero_grad()
             self.sketch_optimizer.zero_grad()
@@ -368,7 +368,7 @@ class TripletNet(object):
         # lr = self.optimizers[0].param_groups[0]['lr']
         # print('learning rate = %.7f' % lr)
     def update_test_frequency(self, epoch):
-        if epoch > self.opt.niter + self.opt.niter_decay / 3:
+        if epoch > self.opt.niter + self.opt.niter_decay * 0.75:
             self.opt.test_freq = 5
 
     def run(self):

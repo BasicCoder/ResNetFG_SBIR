@@ -43,17 +43,36 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 2790  | 0.488543 | 0.837289 |
 |                        |                                                                                                               | 2970  | 0.487861 | 0.838925 |
 |                        |                                                                                                               | 3000  |
+| resnet50               | batch_size=32 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.251637 | 0.657119 |
+|                        | niter=2000 <br>  niter_decay=2000                                                                             | 200   | 0.290507 | 0.694490 |
+|                        |                                                                                                               | 500   | 0.360474 | 0.759138 |
+|                        |                                                                                                               | 1000  |
+|                        |                                                                                                               |
+|                        |                                                                                                               |
+|                        |                                                                                                               |
 | resnet50 hardest       | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.291462 | 0.710311 |
 |                        | niter=2000 <br>  niter_decay=2000                                                                             | 200   | 0.344517 | 0.749454 |
 |                        |                                                                                                               | 500   | 0.396208 | 0.785052 |
 |                        |                                                                                                               | 1000  | 0.437397 | 0.810829 |
 |                        |                                                                                                               | 1500  | 0.449809 | 0.820649 |
 |                        |                                                                                                               | 2000  | 0.447900 | 0.815057 |
-|                        |                                                                                                               |
+|                        |                                                                                                               | 2500  | 0.466721 | 0.825968 |
+|                        |                                                                                                               | 3000  | 0.471086 | 0.832788 |
+|                        |                                                                                                               | 3500  | 0.480360 | 0.828833 |
+|                        |                                                                                                               | 3700  | 0.493316 | 0.839198 |
+|                        |                                                                                                               | 3800  | 0.488680 | 0.836607 |
+|                        |                                                                                                               | 3900  | 0.491680 | 0.839607 |
+|                        |                                                                                                               | 3950  | 0.493453 | 0.841653 |
+|                        |                                                                                                               | 3965  | 0.493726 | 0.840016 |
 | resnet50 hardest       | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 2920  | 0.483906 | 0.834970 |
 |                        | niter=2000 <br> niter_decay=2000 <br> epoch_count=2500(from resnet50 b64 best?)                               | 3175  | 0.489498 | 0.835788 |
 |                        |                                                                                                               | 3195  | 0.491134 | 0.834152 |
 |                        |                                                                                                               |       |
+| resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_tri=10.0  | 100   | 0.361702 | 0.749182 |
+|                        | weight_decay=0.0 <br> niter=2000 <br>  niter_decay=2000                                                       | 200   | 0.399891 | 0.783552 |
+|                        |                                                                                                               | 500   | 0.440262 | 0.814921 |
+|                        |                                                                                                               |
+|                        |
 | resnet152              | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.254910 | 0.662029 |
 |                        |                                                                                                               | 200   | 0.314375 | 0.733497 |
 |                        |                                                                                                               |       |

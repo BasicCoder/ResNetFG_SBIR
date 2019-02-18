@@ -43,13 +43,15 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        |                                                                                                               | 2790  | 0.488543 | 0.837289 |
 |                        |                                                                                                               | 2970  | 0.487861 | 0.838925 |
 |                        |                                                                                                               | 3000  |
-| resnet50               | batch_size=32 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.251637 | 0.657119 |
-|                        | niter=2000 <br>  niter_decay=2000                                                                             | 200   | 0.290507 | 0.694490 |
+| resnet50               | batch_size=32 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 50    | 0.218358 | 0.600791 |
+|                        | niter=2000 <br>  niter_decay=2000                                                                             | 100   | 0.251637 | 0.657119 |
+|                        |                                                                                                               | 200   | 0.290507 | 0.694490 |
 |                        |                                                                                                               | 500   | 0.360474 | 0.759138 |
-|                        |                                                                                                               | 1000  |
-|                        |                                                                                                               |
-|                        |                                                                                                               |
-|                        |                                                                                                               |
+|                        |                                                                                                               | 1000  | 0.393617 | 0.774959 |
+|                        |                                                                                                               | 1500  | 0.415030 | 0.812330 |
+|                        |                                                                                                               | 2000  | 0.424168 | 0.810420 |
+|                        |                                                                                                               |       |          |
+|                        |                                                                                                               |       |          |
 | resnet50 hardest       | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.291462 | 0.710311 |
 |                        | niter=2000 <br>  niter_decay=2000                                                                             | 200   | 0.344517 | 0.749454 |
 |                        |                                                                                                               | 500   | 0.396208 | 0.785052 |
@@ -68,11 +70,38 @@ This project is to expand [CDOTAD/SketchyDatabase](https://github.com/CDOTAD/Ske
 |                        | niter=2000 <br> niter_decay=2000 <br> epoch_count=2500(from resnet50 b64 best?)                               | 3175  | 0.489498 | 0.835788 |
 |                        |                                                                                                               | 3195  | 0.491134 | 0.834152 |
 |                        |                                                                                                               |       |
-| resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_tri=10.0  | 100   | 0.361702 | 0.749182 |
-|                        | weight_decay=0.0 <br> niter=2000 <br>  niter_decay=2000                                                       | 200   | 0.399891 | 0.783552 |
+| resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_tri=10.0  | 50    | 0.305237 | 0.683170 |
+|                        | weight_decay=0.0 <br> niter=2000 <br>  niter_decay=2000                                                       | 100   | 0.361702 | 0.749182 |
+|                        |                                                                                                               | 200   | 0.399891 | 0.783552 |
 |                        |                                                                                                               | 500   | 0.440262 | 0.814921 |
-|                        |                                                                                                               |
-|                        |
+|                        |                                                                                                               | 1000  | 0.460174 | 0.824741 |
+|                        |                                                                                                               | 1500  | 0.463584 | 0.824468 |
+|                        |                                                                                                               | 2000  | 0.466176 | 0.820513 |
+|                        |                                                                                                               | 2500  | 0.478178 | 0.826650 |
+|                        |                                                                                                               | 3000  | 0.486088 | 0.833742 |
+|                        |                                                                                                               | 3895  | 0.509820 | 0.850655 |
+|                        |                                                                                                               | 3500  | 0.491135 | 0.841517 |
+|                        |                                                                                                               | 4000  | 0.506001 | 0.848882 |
+| resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_tri=50.0  | 50    | 0.324741 | 0.693126 |
+|                        | weight_decay=0.0 <br> niter=2000 <br>  niter_decay=2000                                                       | 100   | 0.381888 | 0.764594 |
+|                        |                                                                                                               | 200   | 0.425941 | 0.792690 |
+|                        |                                                                                                               | 500   | 0.454719 | 0.817512 |
+|                        |                                                                                                               | 1000  | 0.456901 | 0.828833 |
+|                        |                                                                                                               | 1500  | 0.476678 | 0.835243 |
+|                        |                                                                                                               | 2000  | 0.472450 | 0.828833 |
+|                        |                                                                                                               | 2500  | 0.490180 | 0.836197 |
+|                        |                                                                                                               |       |
+|                        |                                                                                                               |       |
+| resnet50               | batch_size=64 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_tri=100.0 | 50    | 0.322013 | 0.698309 |
+|                        | weight_decay=0.0 <br> niter=2000 <br>  niter_decay=2000                                                       | 100   | 0.383797 | 0.759956 |
+|                        |                                                                                                               | 200   | 0.435215 | 0.796099 |
+|                        |                                                                                                               | 500   | 0.462084 | 0.824468 |
+|                        |                                                                                                               | 1000  | 0.470676 | 0.829242 |
+|                        |                                                                                                               | 1500  | 0.478314 | 0.831697 |
+|                        |                                                                                                               | 2000  | 0.477632 | 0.828287 |
+|                        |                                                                                                               | 2500  | 0.488407 | 0.834288 |
+|                        |                                                                                                               |       |
+|                        |                                                                                                               |       |
 | resnet152              | batch_size=48 <br> lr=1e-05 <br> margin=0.3 <br> metric='euclidean' <br> weight_cat=1.0 <br> weight_decay=0.0 | 100   | 0.254910 | 0.662029 |
 |                        |                                                                                                               | 200   | 0.314375 | 0.733497 |
 |                        |                                                                                                               |       |

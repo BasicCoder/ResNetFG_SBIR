@@ -52,6 +52,7 @@ def parase_args():
     parser.add_argument('--cat', type=str2bool, nargs='?', default=True, help='Whether to use category loss')
     parser.add_argument('--weight_cat', type=float, default=1.0, help='Whether to use category loss')
     parser.add_argument('--weight_tri', type=float, default=10.0, help='Whether to use triplet loss')
+    parser.add_argument('--weight_mut', type=float, default=20.0, help='Whether to use mutual loss')
 
     parser.add_argument('--display_id', type=int, default=1, help='window id of the web display')
     parser.add_argument('--display_server', type=str, default="http://localhost", help='visdom server of the web display')

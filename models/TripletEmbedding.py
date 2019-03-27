@@ -95,6 +95,18 @@ def hard_example_mining(s_feature, p_feature):
     assert p_feature.size() == negative_feature.size()
     return negative_feature
 
+def Mutual_Loss(feature):
+    dist_mat = euclidean_dist(feature, feature)
+    N = dist_mat.size(0)
+
+    eye = t.eye(N, dtype=t.float).cuda()
+    dist_mat = dist_mat - dist_mat * eye + 0.3 * eye
+
+    dist = F.relu(0.3 - dist_mat)
+
+    dists = t.mean(dist)
+    return dists
+
 class TripletNet(object):
     def __init__(self, opt):
         self.opt = opt
@@ -195,6 +207,8 @@ class TripletNet(object):
             # triplet loss
             loss = (p_cat_loss + s_cat_loss) * self.opt.weight_cat
 
+            mutul_loss = Mutual_Loss(p_feature) + Mutual_Loss(s_feature)
+            loss = loss + mutul_loss * 20.0
             for i in range(photo.size(0)):
                 # negative
                 negative_feature = t.cat([p_feature[0:i, :], p_feature[i + 1:, :]], dim=0)
@@ -264,6 +278,8 @@ class TripletNet(object):
             # triplet loss
             loss = (p_cat_loss + s_cat_loss) * self.opt.weight_cat
 
+            mutul_loss = Mutual_Loss(p_feature) + Mutual_Loss(s_feature)
+            loss = loss + mutul_loss * self.opt.weight_mut
             anchor_feature = s_feature
             positive_feature = p_feature
             negative_feature = hard_example_mining(s_feature, p_feature)
@@ -368,7 +384,7 @@ class TripletNet(object):
         # lr = self.optimizers[0].param_groups[0]['lr']
         # print('learning rate = %.7f' % lr)
     def update_test_frequency(self, epoch):
-        if epoch > self.opt.niter + self.opt.niter_decay * 0.75:
+        if epoch > self.opt.niter + self.opt.niter_decay * 0.85:
             self.opt.test_freq = 5
 
     def run(self):

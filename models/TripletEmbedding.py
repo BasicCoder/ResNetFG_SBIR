@@ -5,7 +5,7 @@ from torch.optim import lr_scheduler
 from data import TripletDataLoader
 
 from models.vgg import vgg16
-from models.resnet import resnet34, resnet50, resnet101, resnet152
+from models.resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 from models.center_loss import CenterLoss
 from utils.visualize import Visualizer
 from torchnet.meter import AverageValueMeter
@@ -154,6 +154,12 @@ class TripletNet(object):
 
         return model
 
+    def _get_resnet18(self, pretrained=True):
+        model = resnet18(pretrained)
+        model.fc = nn.Linear(in_features=512, out_features=125)
+
+        return model
+
     def _get_resnet34(self, pretrained=True):
         model = resnet34(pretrained=pretrained)
         model.fc = nn.Linear(in_features=512, out_features=125)
@@ -208,7 +214,7 @@ class TripletNet(object):
             loss = (p_cat_loss + s_cat_loss) * self.opt.weight_cat
 
             mutul_loss = Mutual_Loss(p_feature) + Mutual_Loss(s_feature)
-            loss = loss + mutul_loss * 20.0
+            loss = loss + mutul_loss * self.opt.weight_mut
             for i in range(photo.size(0)):
                 # negative
                 negative_feature = t.cat([p_feature[0:i, :], p_feature[i + 1:, :]], dim=0)
@@ -391,6 +397,9 @@ class TripletNet(object):
         if self.net == 'vgg16':
             self.photo_net = self._get_vgg16().cuda(self.opt.gpu_ids[0])
             self.sketch_net = self._get_vgg16().cuda(self.opt.gpu_ids[0])
+        elif self.net == 'resnet18':
+            self.photo_net = self._get_resnet18().cuda()
+            self.sketch_net = self._get_resnet18().cuda()
         elif self.net == 'resnet34':
             self.photo_net = self._get_resnet34().cuda()
             self.sketch_net = self._get_resnet34().cuda()
@@ -462,6 +471,7 @@ class TripletNet(object):
 
             # train
             self.train()
+            # self.train_hardest()
             # adjust learning rate
             self.update_learning_rate()
             # adjust test frequency
